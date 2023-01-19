@@ -1,0 +1,13 @@
+{
+  "icon": "nebulagraph.svg",
+  "vm": {
+    "composefile": "docker-compose.yaml"
+  },
+  "ui": {
+    "dashboard-tab": {
+      "title": "NebulaGraph",
+      "src": "index.html",
+      "root": "ui"
+    }
+  }
+}

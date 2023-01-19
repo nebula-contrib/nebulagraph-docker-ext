@@ -1,0 +1,342 @@
+services:
+  metad0:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-metad:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad0
+      - --ws_ip=metad0
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad0:19559/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9559
+      - 19559
+      - 19560
+    volumes:
+      - ~/.nebulagraph/data/meta0:/data/meta
+      - ~/.nebulagraph/logs/meta0:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  metad1:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-metad:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad1
+      - --ws_ip=metad1
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad1:19559/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9559
+      - 19559
+      - 19560
+    volumes:
+      - ~/.nebulagraph/data/meta1:/data/meta
+      - ~/.nebulagraph/logs/meta1:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+
+  metad2:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-metad:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=metad2
+      - --ws_ip=metad2
+      - --port=9559
+      - --ws_http_port=19559
+      - --data_path=/data/meta
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://metad2:19559/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9559
+      - 19559
+      - 19560
+    volumes:
+      - ~/.nebulagraph/data/meta2:/data/meta
+      - ~/.nebulagraph/logs/meta2:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  storaged0:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-storaged:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged0
+      - --ws_ip=storaged0
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - metad0
+      - metad1
+      - metad2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged0:19779/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9779
+      - 19779
+      - 19780
+    volumes:
+      - ~/.nebulagraph/data/storage0:/data/storage
+      - ~/.nebulagraph/logs/storage0:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  storaged1:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-storaged:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged1
+      - --ws_ip=storaged1
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - metad0
+      - metad1
+      - metad2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged1:19779/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9779
+      - 19779
+      - 19780
+    volumes:
+      - ~/.nebulagraph/data/storage1:/data/storage
+      - ~/.nebulagraph/logs/storage1:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  storaged2:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-storaged:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --local_ip=storaged2
+      - --ws_ip=storaged2
+      - --port=9779
+      - --ws_http_port=19779
+      - --data_path=/data/storage
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - metad0
+      - metad1
+      - metad2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://storaged2:19779/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9779
+      - 19779
+      - 19780
+    volumes:
+      - ~/.nebulagraph/data/storage2:/data/storage
+      - ~/.nebulagraph/logs/storage2:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  graphd:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-graphd:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --port=9669
+      - --local_ip=graphd
+      - --ws_ip=graphd
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - storaged0
+      - storaged1
+      - storaged2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://graphd:19669/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "9669:9669"
+      - 19669
+      - 19670
+    volumes:
+      - ~/.nebulagraph/logs/graph:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  graphd1:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-graphd:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --port=9669
+      - --local_ip=graphd1
+      - --ws_ip=graphd1
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - storaged0
+      - storaged1
+      - storaged2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://graphd1:19669/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9669
+      - 19669
+      - 19670
+    volumes:
+      - ~/.nebulagraph/logs/graph1:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  graphd2:
+    labels:
+      - "com.vesoft.scope=core"
+    image: vesoft/nebula-graphd:v3.3.0
+    environment:
+      USER: root
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --port=9669
+      - --local_ip=graphd2
+      - --ws_ip=graphd2
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --v=0
+      - --minloglevel=0
+    depends_on:
+      - storaged0
+      - storaged1
+      - storaged2
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://graphd2:19669/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - 9669
+      - 19669
+      - 19670
+    volumes:
+      - ~/.nebulagraph/logs/graph2:/logs
+    networks:
+      - nebula-net
+    restart: on-failure
+
+  studio:
+    # profiles: ["studio"]
+    labels:
+      - "com.vesoft.scope=utils"
+    image: vesoft/nebula-graph-studio:v3.5.0
+    environment:
+      USER: root
+    ports:
+      - 7001:7001
+    networks:
+      - nebula-net
+  studio_lagacy:
+    # profiles: ["studio"]
+    labels:
+      - "com.vesoft.scope=utils"
+    image: vesoft/nebula-graph-studio:v3.2.5
+    environment:
+      USER: root
+    ports:
+      - 7002:7001
+    networks:
+      - nebula-net
+
+networks:
+  nebula-net:
