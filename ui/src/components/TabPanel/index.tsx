@@ -131,15 +131,21 @@ function homePage() {
       <Grid container spacing={1}>
         <Grid item xs={8}>
           <Box mb={3}>
-              <a href="https://stackoverflow.com/questions/tagged/nebula-graph">
+              <a href="#"
+                onClick={() => openExternalUrl("https://stackoverflow.com/questions/tagged/nebula-graph")}
+              >
                 <img src="https://img.shields.io/badge/Stack%20Overflow-nebula--graph-orange?style=for-the-badge&amp;logo=stack-overflow&amp;logoColor=white" alt="Stack Overflow"/>
               </a>
               <span style={{marginRight: 10}}></span>
-              <a href="https://github.com/vesoft-inc/nebula/discussions">
+              <a href="#"
+                onClick={() => openExternalUrl("https://github.com/vesoft-inc/nebula/discussions")}
+              >
                 <img src="https://img.shields.io/badge/GitHub_Discussion-000000?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="Discussions"/>
               </a>
               <span style={{marginRight: 10}}></span>
-              <a href="https://community-chat.nebula-graph.io/">
+              <a href="#"
+                onClick={() => openExternalUrl("https://community-chat.nebula-graph.io/")}
+              >
                 <img src="https://img.shields.io/badge/Community%20Chat-9F2B68?style=for-the-badge&amp;logo=slack&amp;logoColor=white" alt="Chat History"/>
               </a>
           </Box>
