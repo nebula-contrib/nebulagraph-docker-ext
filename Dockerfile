@@ -31,7 +31,7 @@ LABEL org.opencontainers.image.title="NebulaGraph" \
     com.docker.extension.detailed-description="NebulaGraph is a popular Open-Source, distributed Cloud Native Graph Database for trillion edges graph data volume." \
     com.docker.extension.publisher-url="https://github.com/vesoft-inc/nebula" \
     com.docker.extension.additional-urls='[{"title":"WebSite","url":"https://www.nebula-graph.io/"}, {"title":"GitHub","url":"https://github.com/vesoft-inc/nebula"}, {"title":"Feedback","url":"https://github.com/wey-gu/nebulagraph-docker-ext/issues/new/choose"}, {"title":"Slack","url":"http://community-chat.nebula-graph.io/"}]' \
-    com.docker.extension.changelog="See https://github.com/wey-gu/nebulagraph-docker-ext/" \
+    com.docker.extension.changelog="See https://github.com/nebula-contrib/nebulagraph-docker-ext/" \
     com.docker.desktop.extension.icon="https://user-images.githubusercontent.com/1651790/213339618-107d0e59-1b8b-4c89-bbae-5529aa4e2666.svg" \
     com.docker.extension.categories="database"
 
