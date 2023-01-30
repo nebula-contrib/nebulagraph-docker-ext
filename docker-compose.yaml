@@ -337,6 +337,17 @@ services:
       - 7002:7001
     networks:
       - nebula-net
+  # studio_nightly:
+  #   # profiles: ["studio"]
+  #   labels:
+  #     - "com.vesoft.scope=utils"
+  #   image: vesoft/nebula-graph-studio:nightly
+  #   environment:
+  #     USER: root
+  #   ports:
+  #     - 7003:7001
+  #   networks:
+  #     - nebula-net
 
 networks:
   nebula-net:
