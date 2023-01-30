@@ -2,6 +2,12 @@
 
 This is the repo for NebulaGraph Docker Desktop extension.
 
+https://user-images.githubusercontent.com/1651790/215404357-61d39b95-1675-49cc-a88e-d03ca16d482a.mp4
+
+## Install from Dockerhub
+
+Just click [here](https://open.docker.com/extensions/marketplace?extensionId=weygu/nebulagraph-dd-ext&tag=latest) to install if you already have Docker Desktop installed.
+
 ## Local development
 
 You can use `docker` to build, install and push your extension. Also, we provide an opinionated [Makefile](Makefile) that could be convenient for you. There isn't a strong preference of using one over the other, so just use the one you're most comfortable with.
