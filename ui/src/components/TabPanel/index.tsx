@@ -579,7 +579,7 @@ export default function NebulaGraphTabs() {
         {activeStep === 3 && (
           <Typography sx={{ mt: 2, mb: 1 }}>
             <Typography variant="h6" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
-              <b>Step {activeStep + 1}</b> - Load the initial Dataset.
+              <b>Step {activeStep + 1}</b> - Query the Graph from Studio Console.
             </Typography>
 
             <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
