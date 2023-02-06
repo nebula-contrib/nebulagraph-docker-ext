@@ -2,7 +2,7 @@ services:
   metad0:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-metad:v3.3.0
+    image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
     command:
@@ -35,7 +35,7 @@ services:
   metad1:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-metad:v3.3.0
+    image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
     command:
@@ -69,7 +69,7 @@ services:
   metad2:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-metad:v3.3.0
+    image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
     command:
@@ -102,7 +102,7 @@ services:
   storaged0:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-storaged:v3.3.0
+    image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
     command:
@@ -139,7 +139,7 @@ services:
   storaged1:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-storaged:v3.3.0
+    image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
     command:
@@ -176,7 +176,7 @@ services:
   storaged2:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-storaged:v3.3.0
+    image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
     command:
@@ -213,7 +213,7 @@ services:
   graphd:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-graphd:v3.3.0
+    image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
     command:
@@ -248,7 +248,7 @@ services:
   graphd1:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-graphd:v3.3.0
+    image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
     command:
@@ -283,7 +283,7 @@ services:
   graphd2:
     labels:
       - "com.vesoft.scope=core"
-    image: vesoft/nebula-graphd:v3.3.0
+    image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
     command:
@@ -319,7 +319,8 @@ services:
     # profiles: ["studio"]
     labels:
       - "com.vesoft.scope=utils"
-    image: vesoft/nebula-graph-studio:v3.5.0
+    platform: linux/amd64
+    image: vesoft/nebula-graph-studio:v3.6.0
     environment:
       USER: root
     ports:
@@ -330,6 +331,7 @@ services:
     # profiles: ["studio"]
     labels:
       - "com.vesoft.scope=utils"
+    platform: linux/amd64
     image: vesoft/nebula-graph-studio:v3.2.5
     environment:
       USER: root
