@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { Help, Insights, Refresh } from '@mui/icons-material';
 import { createDockerDesktopClient } from '@docker/extension-api-client';
+import Confetti from 'react-confetti'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -218,7 +219,7 @@ export default function NebulaGraphTabs() {
     'Activate StorageD',
     'Load Dataset',
     'Query NebulaGraph',
-    'Explore More from Docs and Community',
+    'Finish',
   ];
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -319,10 +320,10 @@ export default function NebulaGraphTabs() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Container id</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -351,10 +352,10 @@ export default function NebulaGraphTabs() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Container id</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -403,8 +404,12 @@ export default function NebulaGraphTabs() {
         </Stepper>
         {activeStep === steps.length ? (
           <React.Fragment>
+            <Confetti
+              width={window.innerWidth}
+              height={window.innerHeight}
+            />
             <Typography sx={{ mt: 2, mb: 1 }}>
-              Congrats!
+              Congrats! And have fun with NebulaGraph!
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
@@ -487,27 +492,6 @@ export default function NebulaGraphTabs() {
             )}
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              {
-              // isStepOptional(activeStep) &&
-              (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )}
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
-            </Box>
           </React.Fragment>
         )}
 
@@ -649,6 +633,35 @@ export default function NebulaGraphTabs() {
 
           </Typography>
         )}
+
+        {/* fix the follow box at the bottom */}
+
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          bottom: 1,
+          p: 2,
+         }}>
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+          {
+            // isStepOptional(activeStep) &&
+            (
+              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                Skip
+              </Button>
+            )}
+          <Button onClick={handleNext}>
+            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+          </Button>
+        </Box>
 
       </TabPanel>
 
