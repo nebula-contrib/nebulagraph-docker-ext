@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { Help, Insights, Refresh } from '@mui/icons-material';
 import { createDockerDesktopClient } from '@docker/extension-api-client';
+import Confetti from 'react-confetti'
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -218,7 +219,7 @@ export default function NebulaGraphTabs() {
     'Activate StorageD',
     'Load Dataset',
     'Query NebulaGraph',
-    'Explore More from Docs and Community',
+    'Finish',
   ];
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
@@ -237,9 +238,9 @@ export default function NebulaGraphTabs() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+
   };
 
   const handleBack = () => {
@@ -319,10 +320,10 @@ export default function NebulaGraphTabs() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Container id</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -351,10 +352,10 @@ export default function NebulaGraphTabs() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Container id</TableCell>
-                <TableCell>Image</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Status</TableCell>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -401,17 +402,7 @@ export default function NebulaGraphTabs() {
             );
           })}
         </Stepper>
-        {activeStep === steps.length ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              Congrats!
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </React.Fragment>
-        ) : (
+        {(
           <React.Fragment>
             {/* <Typography sx={{ mt: 2, mb: 1 }}>xxx Step {activeStep + 1}</Typography> */}
 
@@ -487,27 +478,6 @@ export default function NebulaGraphTabs() {
             )}
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
-              {
-              // isStepOptional(activeStep) &&
-              (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )}
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
-            </Box>
           </React.Fragment>
         )}
 
@@ -624,6 +594,12 @@ export default function NebulaGraphTabs() {
 
         {activeStep === 4 && (
           <Typography sx={{ mt: 2, mb: 1 }}>
+
+            <Confetti
+              width={window.innerWidth}
+              height={window.innerHeight}
+            />
+
             <Typography variant="h6" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               <b>Step {activeStep + 1}</b> - Congrats!
             </Typography>
@@ -631,6 +607,14 @@ export default function NebulaGraphTabs() {
             <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               Now you have your initial local NebulaGraph playground!
             </Typography>
+
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <img
+                src="https://user-images.githubusercontent.com/1651790/217713489-1d7affe2-387f-443b-8e0f-f3e54e09fcd2.png"
+                alt="celebrate"
+                width="40%"
+              />
+            </Box>
 
             <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               <List component="div">
@@ -649,6 +633,35 @@ export default function NebulaGraphTabs() {
 
           </Typography>
         )}
+
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          bottom: 1,
+         }}>
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: '1 1 auto' }} />
+
+            {activeStep !== steps.length - 1 && (
+              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
+                Skip
+              </Button>
+            )}
+
+          {/* only show if not last step */}
+          {activeStep !== steps.length - 1 && (
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          )}
+        </Box>
 
       </TabPanel>
 
