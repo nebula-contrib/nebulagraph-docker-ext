@@ -238,9 +238,9 @@ export default function NebulaGraphTabs() {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
     }
-
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     setSkipped(newSkipped);
+
   };
 
   const handleBack = () => {
@@ -402,21 +402,7 @@ export default function NebulaGraphTabs() {
             );
           })}
         </Stepper>
-        {activeStep === steps.length ? (
-          <React.Fragment>
-            <Confetti
-              width={window.innerWidth}
-              height={window.innerHeight}
-            />
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              Congrats! And have fun with NebulaGraph!
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </React.Fragment>
-        ) : (
+        {(
           <React.Fragment>
             {/* <Typography sx={{ mt: 2, mb: 1 }}>xxx Step {activeStep + 1}</Typography> */}
 
@@ -608,6 +594,12 @@ export default function NebulaGraphTabs() {
 
         {activeStep === 4 && (
           <Typography sx={{ mt: 2, mb: 1 }}>
+
+            <Confetti
+              width={window.innerWidth}
+              height={window.innerHeight}
+            />
+
             <Typography variant="h6" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               <b>Step {activeStep + 1}</b> - Congrats!
             </Typography>
@@ -615,6 +607,14 @@ export default function NebulaGraphTabs() {
             <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               Now you have your initial local NebulaGraph playground!
             </Typography>
+
+            <Box sx={{ mt: 2, mb: 1 }}>
+              <img
+                src="https://user-images.githubusercontent.com/1651790/217713489-1d7affe2-387f-443b-8e0f-f3e54e09fcd2.png"
+                alt="celebrate"
+                width="40%"
+              />
+            </Box>
 
             <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
               <List component="div">
@@ -634,13 +634,10 @@ export default function NebulaGraphTabs() {
           </Typography>
         )}
 
-        {/* fix the follow box at the bottom */}
-
         <Box sx={{
           display: 'flex',
           flexDirection: 'row',
           bottom: 1,
-          p: 2,
          }}>
           <Button
             color="inherit"
@@ -651,16 +648,19 @@ export default function NebulaGraphTabs() {
             Back
           </Button>
           <Box sx={{ flex: '1 1 auto' }} />
-          {
-            // isStepOptional(activeStep) &&
-            (
+
+            {activeStep !== steps.length - 1 && (
               <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
                 Skip
               </Button>
             )}
-          <Button onClick={handleNext}>
-            {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-          </Button>
+
+          {/* only show if not last step */}
+          {activeStep !== steps.length - 1 && (
+            <Button onClick={handleNext}>
+              {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+            </Button>
+          )}
         </Box>
 
       </TabPanel>
