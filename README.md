@@ -8,7 +8,7 @@ For a full deployment guide, refer to [https://youtu.be/AOMexOohZYI](https://you
 
 ## Install from Dockerhub
 
-Just click [here](https://open.docker.com/extensions/marketplace?extensionId=weygu/nebulagraph-dd-ext&tag=latest) to install if you already have Docker Desktop installed.
+Just click **[here](https://open.docker.com/extensions/marketplace?extensionId=weygu/nebulagraph-dd-ext&tag=latest)** to install if you already have the latest version of Docker Desktop installed.
 
 ## Local development
 
