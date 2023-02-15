@@ -152,7 +152,7 @@ function homePage() {
           </Box>
           <Box mb={3}>
               <Typography variant="body1">
-                <strong>NebulaGraph</strong> is a popular open-source graph database that can handle large volumes of data with milliseconds of latency, scale up quickly, and have the ability to perform fast graph analytics. NebulaGraph has been widely used for social media, recommendation systems, knowledge graphs, security, capital flows, AI, etc.
+                <strong>NebulaGraph</strong> is a popular open-source graph database that can handle large volumes of data with millisecond latency, perform fast graph analytics, and scale out quickly. It is widely used in social media, recommendation systems, knowledge graphs, security, capital flows, and AI.
                 See <a href="#" onClick={() => openExternalUrl("https://nebula-graph.io/cases")}>NebulaGraph users</a>
               </Typography>
           </Box>
@@ -160,14 +160,14 @@ function homePage() {
         <Grid item xs={12}>
           <Box mb={3}>
             <Typography variant="h6" gutterBottom>
-              NebulaGraph is:
+              NebulaGraph features
             </Typography>
             <Typography variant="body1">
             <ul>
-              <li>Distributed</li>
-              <li>Storage and Computation separation</li>
+              <li>Distributed architecture</li>
+              <li>Storage and computation separation</li>
               <li>Horizontal scalability</li>
-              <li>Strong data consistency by RAFT protocol</li>
+              <li>Strong data consistency via RAFT protocol</li>
               <li>OpenCypher-compatible query language</li>
             </ul>
             </Typography>
@@ -208,6 +208,8 @@ export default function NebulaGraphTabs() {
 
   const [coreContainers, setCoreContainers] = React.useState<any[]>([]);
   const [utilsContainers, setUtilsContainers] = React.useState<any[]>([]);
+
+  const [storageActivated, setStorageActivated] = React.useState(false);
 
   const openExternalUrl = (url: string) => {
     ddClient.host.openExternal(url);
@@ -276,11 +278,34 @@ export default function NebulaGraphTabs() {
     });
 
     setTimeout(fetchContainerList, 60000);
+    addHostsIfStorageUnhealthy();
   };
   
   React.useEffect(() => {
     fetchContainerList();
   }, []);
+
+  // run `docker run --net <network_of_graphd> --rm vesoft/nebula-console:v3 -addr graphd -port 9669 -u root -p nebula -e 'ADD HOSTS "storaged0":9779,"storaged1":9779,"storaged2":9779'`
+  const addHostsIfStorageUnhealthy = async () => {
+    if (storageActivated) {
+      return;
+    }
+    const unhealthyStoragedContainers = coreContainers.filter(item => {
+      return item.Labels.includes("com.vesoft.role=storage") && item.State === "running" && item.Status.includes("unhealthy");
+    });
+    if (unhealthyStoragedContainers.length === 0) {
+      return;
+    }
+    const networkName = unhealthyStoragedContainers[0]["Networks"]
+    if (networkName) {
+      ddClient.docker.cli.exec('run', ['--net', networkName, '--rm', 'vesoft/nebula-console:v3', '-addr', 'graphd', '-port', '9669', '-u', 'root', '-p', 'nebula', '-e', '\'ADD HOSTS "storaged0":9779,"storaged1":9779,"storaged2":9779\'']).then((result) => {
+        console.log("the result of adding hosts: ", result);
+        if (result.stdout.includes("existed")) {
+          setStorageActivated(true);
+        }
+      });
+    }
+  };
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -309,11 +334,11 @@ export default function NebulaGraphTabs() {
         </Box>
 
         <Box sx={{ alignItems: 'left', flexDirection: 'column'}}>
-        <b>- Empty?</b> By default we cannot see Docker Desktop extension spawned containers, see <a href="#" onClick={() => openExternalUrl("https://docs.docker.com/desktop/extensions-sdk/dev/test-debug/#show-the-extension-containers")}>docs</a> on how to change the setting.
+        - Is the resource <b>empty?</b> By default, Docker Desktop extension spawned containers are hidden. Please refer to the <a href="#" onClick={() => openExternalUrl("https://docs.docker.com/desktop/extensions-sdk/dev/test-debug/#show-the-extension-containers")}>documentation</a> on how to change this setting.
         </Box>
 
         <Box sx={{ alignItems: 'left', flexDirection: 'column'}}>
-        <b>- unhealthy</b> for storaged? Follow the <b>Get Started</b> steps for first time run.
+        - Storage is <b>unhealthy</b>? Please follow the <b>Get Started</b> steps for the first run.
         </Box>
 
         <TableContainer sx={{mt:-1}}>
@@ -625,7 +650,7 @@ export default function NebulaGraphTabs() {
                 Join the NebulaGraph Community 🏂 <a href="#" onClick={() => openExternalUrl("https://github.com/vesoft-inc/nebula-community")}>github.com/vesoft-inc/nebula-community</a>
                 </ListItem>
                 <ListItem>
-                Start building your own graph applications!
+                Now, you can start building your own scalable graph applications!
                 </ListItem>
               </List>
 

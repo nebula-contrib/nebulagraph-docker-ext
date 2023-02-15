@@ -2,6 +2,8 @@ services:
   metad0:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=meta"
+    container_name: nebulagraph_metad0
     image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
@@ -35,6 +37,8 @@ services:
   metad1:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=meta"
+    container_name: nebulagraph_metad1
     image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
@@ -69,6 +73,8 @@ services:
   metad2:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=meta"
+    container_name: nebulagraph_metad2
     image: vesoft/nebula-metad:v3.4.0
     environment:
       USER: root
@@ -102,6 +108,8 @@ services:
   storaged0:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=storage"
+    container_name: nebulagraph_storaged0
     image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
@@ -139,6 +147,8 @@ services:
   storaged1:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=storage"
+    container_name: nebulagraph_storaged1
     image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
@@ -176,6 +186,8 @@ services:
   storaged2:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=storage"
+    container_name: nebulagraph_storaged2
     image: vesoft/nebula-storaged:v3.4.0
     environment:
       USER: root
@@ -213,6 +225,8 @@ services:
   graphd:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=graph"
+    container_name: nebulagraph_graphd
     image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
@@ -248,6 +262,8 @@ services:
   graphd1:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=graph"
+    container_name: nebulagraph_graphd1
     image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
@@ -283,6 +299,8 @@ services:
   graphd2:
     labels:
       - "com.vesoft.scope=core"
+      - "com.vesoft.role=graph"
+    container_name: nebulagraph_graphd2
     image: vesoft/nebula-graphd:v3.4.0
     environment:
       USER: root
