@@ -17,13 +17,13 @@ You can use `docker` to build, install and push your extension. Also, we provide
 To build the extension, use `make build-extension` **or**:
 
 ```shell
-  docker buildx build -t weygu/nebulagraph-dd-ext:latest . --load
+  docker buildx build -t weygu/nebulagraph-dd-ext:dev . --load
 ```
 
 To install the extension, use `make install-extension` **or**:
 
 ```shell
-  docker extension install weygu/nebulagraph-dd-ext:latest
+  docker extension install weygu/nebulagraph-dd-ext:dev
 ```
 
 > If you want to automate this command, use the `-f` or `--force` flag to accept the warning message.
@@ -46,19 +46,19 @@ This starts a development server that listens on port `3000`.
 You can now tell Docker Desktop to use this as the frontend source. In another terminal run:
 
 ```shell
-  docker extension dev ui-source weygu/nebulagraph-dd-ext:latest http://localhost:3000
+  docker extension dev ui-source weygu/nebulagraph-dd-ext:dev http://localhost:3000
 ```
 
 In order to open the Chrome Dev Tools for your extension when you click on the extension tab, run:
 
 ```shell
-  docker extension dev debug weygu/nebulagraph-dd-ext:latest
+  docker extension dev debug weygu/nebulagraph-dd-ext:dev
 ```
 
 Each subsequent click on the extension tab will also open Chrome Dev Tools. To stop this behaviour, run:
 
 ```shell
-  docker extension dev reset weygu/nebulagraph-dd-ext:latest
+  docker extension dev reset weygu/nebulagraph-dd-ext:dev
 ```
 
 ### Clean up
@@ -66,7 +66,7 @@ Each subsequent click on the extension tab will also open Chrome Dev Tools. To s
 To remove the extension:
 
 ```shell
-docker extension rm weygu/nebulagraph-dd-ext:latest
+docker extension rm weygu/nebulagraph-dd-ext:dev
 ```
 
 ## Reference
