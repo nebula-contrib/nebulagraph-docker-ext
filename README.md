@@ -6,9 +6,12 @@ https://user-images.githubusercontent.com/1651790/215404357-61d39b95-1675-49cc-a
 
 For a full deployment guide, refer to [https://youtu.be/AOMexOohZYI](https://youtu.be/AOMexOohZYI)
 
-## Install from Dockerhub
+## Install from Marketplace
 
-Just click **[here](https://open.docker.com/extensions/marketplace?extensionId=weygu/nebulagraph-dd-ext&tag=latest)** to install if you already have the latest version of Docker Desktop installed.
+Just click **[here](https://hub.docker.com/extensions/weygu/nebulagraph-dd-ext)** to install if you already have the latest version of Docker Desktop installed.
+
+Or search NebulaGraph from Docker Desktop Extension Marketplace.
+![](https://user-images.githubusercontent.com/1651790/220068245-bb1b7e01-4173-48e3-8ad4-d6de74157ff1.png)
 
 ## Local development
 
