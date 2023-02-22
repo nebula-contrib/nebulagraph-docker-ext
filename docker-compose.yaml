@@ -338,7 +338,7 @@ services:
     labels:
       - "com.vesoft.scope=utils"
     platform: linux/amd64
-    image: vesoft/nebula-graph-studio:v3.6.1
+    image: vesoft/nebula-graph-studio:v3.6.2
     environment:
       USER: root
     ports:
