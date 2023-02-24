@@ -315,7 +315,7 @@ export default function NebulaGraphTabs() {
           <Tab label="Resources" {...a11yProps(1)} />
           <Tab label="Get Started" {...a11yProps(2)} />
           <Tab label="Docs" {...a11yProps(3)} />
-          {/* <Tab label="Utils" {...a11yProps(4)} /> */}
+          <Tab label="Console" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -694,9 +694,21 @@ export default function NebulaGraphTabs() {
         <iframe src="https://docs.nebula-graph.io/" width="100%" height="800"/>
       </TabPanel>
 
-      {/* <TabPanel value={value} index={4}>
-        TBD
-      </TabPanel> */}
+      <TabPanel value={value} index={4}>
+        {/* add a Note to run one line of command to login to NebulaGraph Console: nebula-console -addr graphd -port 9669 -user root -p nebula */}
+        <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
+          Run the following command to login to NebulaGraph Console:
+
+          <Box sx={{ mt: 2, mb: 1 }}>
+            <code>
+              <pre>
+                {`nebula-console -addr graphd -port 9669 -user root -p nebula`}
+              </pre>
+            </code>
+          </Box>
+        </Typography>
+        <iframe src="http://127.0.0.1:8376" width="100%" height="800"/>
+      </TabPanel>
     </Box>
   );
 }
