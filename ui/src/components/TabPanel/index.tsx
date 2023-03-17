@@ -709,6 +709,10 @@ export default function NebulaGraphTabs() {
         </Typography>
         <iframe src="http://127.0.0.1:8376" width="100%" height="800"/>
       </TabPanel>
+
+      <TabPanel value={value} index={5}>
+        {/* TBD */}
+      </TabPanel>
     </Box>
   );
 }

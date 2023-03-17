@@ -1,0 +1,64 @@
+services:
+  juptyer:
+    labels:
+      - "com.vesoft.scope=ngai"
+    image: 'weygu/pyspark-notebook-nebulagraph:2.4.5-hadoop2.7'
+    container_name: jupyter
+    restart: always
+    ports:
+      - '18888:8888'
+    volumes:
+      - ~/.nebulagraph/:/root
+
+    networks:
+      - weygu_nebulagraph-dd-ext-desktop-extension_nebula-net
+    healthcheck:
+      test: ["CMD", "netstat", "-plunt", "| grep 8888"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    environment:
+      - PYSPARK_PYTHON=python3
+
+  graphd:
+    labels:
+      - "com.vesoft.scope=ngai"
+    image: weygu/ngai-graphd:2023.03.13
+    container_name: ngai_graphd
+    environment:
+      USER: root
+      ng_ai_gateway_url_prefix: "http://jupyter:9999"
+    command:
+      - --meta_server_addrs=metad0:9559,metad1:9559,metad2:9559
+      - --port=9669
+      - --local_ip=ngai_graphd
+      - --ws_ip=ngai_graphd
+      - --ws_http_port=19669
+      - --log_dir=/logs
+      - --v=5
+      - --minloglevel=0
+      - --enable_udf=true
+      - --udf_path=/udf/
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://ngai_graphd:19669/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    ports:
+      - "29669:9669"
+      - 19669
+      - 19670
+    volumes:
+      - ~/.nebulagraph/logs/ngai_graphd:/logs
+      - ~/.nebulagraph/udf:/udf
+    networks:
+      - weygu_nebulagraph-dd-ext-desktop-extension_nebula-net
+    restart: on-failure
+    cap_add:
+      - SYS_PTRACE
+
+networks:
+  weygu_nebulagraph-dd-ext-desktop-extension_nebula-net:
+    external: true
