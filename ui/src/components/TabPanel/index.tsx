@@ -20,7 +20,7 @@ import {
   Step,
   StepLabel,
 } from "@mui/material";
-import { Help, Insights, Refresh } from '@mui/icons-material';
+import { Help, Insights, Refresh, Psychology } from '@mui/icons-material';
 import { createDockerDesktopClient } from '@docker/extension-api-client';
 import Confetti from 'react-confetti'
 
@@ -208,8 +208,12 @@ export default function NebulaGraphTabs() {
 
   const [coreContainers, setCoreContainers] = React.useState<any[]>([]);
   const [utilsContainers, setUtilsContainers] = React.useState<any[]>([]);
+  const [ngaiContainers, setNgaiContainers] = React.useState<any[]>([]);
 
   const [storageActivated, setStorageActivated] = React.useState(false);
+  const [ngaiDeployed, setNgaiDeployed] = React.useState(false);
+  const [isNgaiDeploying, setNgaiIsDeploying] = React.useState(false);
+  const [isNgaiUndeploying, setNgaiIsUndeploying] = React.useState(false);
 
   const openExternalUrl = (url: string) => {
     ddClient.host.openExternal(url);
@@ -270,13 +274,15 @@ export default function NebulaGraphTabs() {
   // get started stepper tab end
 
   const fetchContainerList = async () => {
-    ddClient.docker.cli.exec('ps', ['--all', '--format', '"{{json .}}"', '--filter', 'label=com.vesoft.scope=core']).then((result) => {
+    ddClient.docker.cli.exec('ps', ['--all', '--format', '"{{json .}}"', '--filter', 'label=com.vesoft.scope=core']).then((result: any) => {
       setCoreContainers(result.parseJsonLines());
     });
-    ddClient.docker.cli.exec('ps', ['--all', '--format', '"{{json .}}"', '--filter', 'label=com.vesoft.scope=utils']).then((result) => {
+    ddClient.docker.cli.exec('ps', ['--all', '--format', '"{{json .}}"', '--filter', 'label=com.vesoft.scope=utils']).then((result: any) => {
       setUtilsContainers(result.parseJsonLines());
     });
-
+    ddClient.docker.cli.exec('ps', ['--all', '--format', '"{{json .}}"', '--filter', 'label=com.vesoft.scope=ngai']).then((result: any) => {
+      setNgaiContainers(result.parseJsonLines());
+    });
     setTimeout(fetchContainerList, 60000);
     addHostsIfStorageUnhealthy();
   };
@@ -298,13 +304,93 @@ export default function NebulaGraphTabs() {
     }
     const networkName = unhealthyStoragedContainers[0]["Networks"]
     if (networkName) {
-      ddClient.docker.cli.exec('run', ['--net', networkName, '--rm', 'vesoft/nebula-console:v3', '-addr', 'graphd', '-port', '9669', '-u', 'root', '-p', 'nebula', '-e', '\'ADD HOSTS "storaged0":9779,"storaged1":9779,"storaged2":9779\'']).then((result) => {
+      ddClient.docker.cli.exec('run', ['--net', networkName, '--rm', 'vesoft/nebula-console:v3', '-addr', 'graphd', '-port', '9669', '-u', 'root', '-p', 'nebula', '-e', '\'ADD HOSTS "storaged0":9779,"storaged1":9779,"storaged2":9779\'']).then((result: any) => {
         console.log("the result of adding hosts: ", result);
         if (result.stdout.includes("existed")) {
           setStorageActivated(true);
         }
       });
     }
+  };
+
+  // Deploy NebulaGraph ngai Playground
+  // 0.1 run docker exec nebulagraph_webshell mkdir -p /host_data/ngai
+  // 0.2 run docker exec nebulagraph_webshell mkdir -p /host_data/download
+  // 0.3 run docker exec nebulagraph_webshell mkdir -p /host_data/udf
+  // 1. run docker exec nebulagraph_webshell wget -O /host_data/ngai/docker-compose.yaml https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai.yaml
+  // 2. run docker exec nebulagraph_webshell wget -O /host_data/download/nebula-algo.jar https://repo1.maven.org/maven2/com/vesoft/nebula-algorithm/$ALGO_VERSION/nebula-algorithm-$ALGO_VERSION.jar
+  // 3. run docker exec nebulagraph_webshell wget -O /host_data/download/nebula-spark-connector.jar https://repo1.maven.org/maven2/com/vesoft/nebula-spark-connector/$SPARK_C_VERSION/nebula-spark-connector-$SPARK_C_VERSION.jar
+  // 4. run docker exec nebulagraph_webshell wget -O /host_data/udf/ng_ai.so https://github.com/wey-gu/nebulagraph-ai/releases/download/0.2.9/ng_ai-ubuntu-2004-nebulagraph-nightly-2023.03.13.so
+  // 5. run docker exec nebulagraph_webshell chmod +x /host_data/udf/ng_ai.so
+  // 6. run docker-compose -f ~/.nebulagraph/ngai/docker-compose.yaml up -d --remove-orphans
+  // 7. run docker exec nebulagraph_webshell wget -O /host_data/ngai/AI_suite_demo.ipynb https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_demo.ipynb
+  // 8. run docker exec nebulagraph_webshell wget -O /host_data/ngai/AI_suite_nGQL_UDF.ipynb https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_nGQL_UDF.ipynb
+
+  const deployNgai = async () => {
+    if (isNgaiDeploying) {
+      console.log("Ngai is deploying, please wait...");
+      return;
+    }
+    setNgaiIsDeploying(true);
+    console.log("Start deploying Ngai...");
+    const mkdirPromises = [
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/ngai']).catch((error: any) => {
+        console.error("Error creating directory /host_data/ngai: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/download']).catch((error: any) => {
+        console.error("Error creating directory /host_data/download: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/udf']).catch((error: any) => {
+        console.error("Error creating directory /host_data/udf: ", error);
+      }),
+    ];
+    await Promise.all(mkdirPromises);
+
+    const downloadPromises = [
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-algo.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-algorithm/3.1.0/nebula-algorithm-3.1.0.jar']).catch((error: any) => {
+        console.error("Error downloading nebula-algo.jar: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/docker-compose.yaml', 'https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai.yaml']).catch((error: any) => {
+        console.error("Error downloading docker-compose.yaml: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/udf/ng_ai.so', 'https://github.com/wey-gu/nebulagraph-ai/releases/download/0.2.9/ng_ai-ubuntu-2004-nebulagraph-nightly-2023.03.13.so']).catch((error: any) => {
+        console.error("Error downloading ng_ai.so: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-spark-connector.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-spark-connector/3.4.0/nebula-spark-connector-3.4.0.jar']).catch((error: any) => {
+        console.error("Error downloading nebula-spark-connector.jar: ", error);
+      }),
+    ];
+    const results = await Promise.all(downloadPromises);
+    results.forEach((result: any) => {
+      console.log("the result of wget: ", result);
+    });
+  
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'chmod', '+x', '/host_data/udf/ng_ai.so']);
+    console.log("the result of chmod ng_ai.so");
+  
+    await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose.yaml', 'up', '-d', '--remove-orphans']);
+    console.log("the result of docker-compose up");
+
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/AI_suite_demo.ipynb', 'https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_demo.ipynb']);
+    console.log("the result of wget AI_suite_demo.ipynb");
+
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/AI_suite_nGQL_UDF.ipynb', 'https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_nGQL_UDF.ipynb']);
+    console.log("the result of wget AI_suite_nGQL_UDF.ipynb");
+
+    setNgaiDeployed(true);
+    setNgaiIsDeploying(false);
+  };
+
+  // Undeploy NebulaGraph AI
+  const undeployNgai = async () => {
+    if (isNgaiUndeploying) {
+      return;
+    }
+    await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose.yaml', 'down']);
+    console.log("the result of docker-compose down");
+  
+    setNgaiDeployed(false);
+    setNgaiIsUndeploying(false);
   };
 
   return (
@@ -316,6 +402,7 @@ export default function NebulaGraphTabs() {
           <Tab label="Get Started" {...a11yProps(2)} />
           <Tab label="Docs" {...a11yProps(3)} />
           <Tab label="Console" {...a11yProps(4)} />
+          <Tab label="NebulaGraph AI" {...a11yProps(5)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -385,6 +472,45 @@ export default function NebulaGraphTabs() {
             </TableHead>
             <TableBody>
               {utilsContainers.map((container) => (
+                <TableRow
+                  key={container.ID}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>{container.ID}</TableCell>
+                  <TableCell>{container.Image}</TableCell>
+                  <TableCell>{container.CreatedAt}</TableCell>
+                  <TableCell>{container.Status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+
+
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" color={(theme) => theme.palette.text.primary} sx={{ my: 2, width: '95%' }}>
+            NebulaGraph AI Suite Resources
+          </Typography>
+          <Fab onClick={fetchContainerList}>
+            <Refresh />
+          </Fab>
+        </Box>
+
+
+
+        <TableContainer sx={{mt:-1}}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {ngaiContainers.map((container) => (
                 <TableRow
                   key={container.ID}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -711,7 +837,103 @@ export default function NebulaGraphTabs() {
       </TabPanel>
 
       <TabPanel value={value} index={5}>
-        {/* TBD */}
+      <Box sx={{ display: 'flex' }}>
+        <Box sx={{ width: '80%' }}>
+          <img
+            src="https://user-images.githubusercontent.com/1651790/226272763-61be3f05-e4f2-4108-a3f8-eb01462a8605.png"
+            alt="celebrate"
+            width="100%"
+          />
+        </Box>
+
+        <Box sx={{ width: '20%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-end' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={deployNgai}
+            disabled={isNgaiDeploying}
+            sx={{ mb: 1, width: '70%' }}
+          >
+            Install
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={undeployNgai}
+            disabled={isNgaiUndeploying}
+            sx={{ width: '70%' }}
+          >
+            Uninstall
+          </Button>
+        </Box>
+
+      </Box>
+
+        {/* Description of NebulaGraph AI Suite */}
+        <Typography variant="body1" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
+          <List component="div">
+            <ListItem>
+              <b>NebulaGraph AI Suite</b> &nbsp; (<a href="#" onClick={() => openExternalUrl("https://github.com/wey-gu/nebulagraph-ai")}>GitHub</a>)
+              is a Python library to run Analytics, Algo & GNN on NebulaGraph.
+            </ListItem>
+            <ListItem>
+              <b>Step 1 Install:</b> &nbsp; It's not by default installed in NebulaGraph This Docker Extension, to install it, click the Install button.
+            </ListItem>
+            <ListItem>
+              <b>Step 2 Run:</b> &nbsp; After installation, you go to
+              <Box sx={{ display: 'inline-block', ml: 2, mr: 2 }}>
+                <Button
+                  variant="outlined"
+                  onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_demo.ipynb")}
+                  endIcon={<Psychology />}
+                >
+                  Jupyter Notebook
+                </Button>
+              </Box>
+              and its password is nebula.
+            </ListItem>
+            <ListItem>
+              <b>Step 3 ng_ai API Gateway:</b> Follow &nbsp;<a href="#" onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_nGQL_UDF.ipynb")}> this </a>&nbsp; to run ng_ai API Gateway and call ng_ai from nGQL.
+            </ListItem>
+          </List>
+        </Typography>
+
+
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="h6" color={(theme) => theme.palette.text.primary} sx={{ my: 2, width: '95%' }}>
+            NebulaGraph AI Suite Resources
+          </Typography>
+          <Fab onClick={fetchContainerList}>
+            <Refresh />
+          </Fab>
+        </Box>
+
+        <TableContainer sx={{mt:-1}}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ width: '15%' }}>Container id</TableCell>
+                <TableCell sx={{ width: '25%' }}>Image</TableCell>
+                <TableCell sx={{ width: '35%' }}>Created</TableCell>
+                <TableCell sx={{ width: '25%' }}>Status</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {ngaiContainers.map((container) => (
+                <TableRow
+                  key={container.ID}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>{container.ID}</TableCell>
+                  <TableCell>{container.Image}</TableCell>
+                  <TableCell>{container.CreatedAt}</TableCell>
+                  <TableCell>{container.Status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
       </TabPanel>
     </Box>
   );

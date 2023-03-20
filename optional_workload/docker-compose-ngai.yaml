@@ -9,7 +9,6 @@ services:
       - '18888:8888'
     volumes:
       - ~/.nebulagraph/:/root
-
     networks:
       - weygu_nebulagraph-dd-ext-desktop-extension_nebula-net
     healthcheck:
