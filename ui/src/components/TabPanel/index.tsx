@@ -179,7 +179,7 @@ function homePage() {
             <Typography variant="h6" gutterBottom>
               Architecture:
             </Typography>
-            <img src="https://camo.githubusercontent.com/3cfabc21c71f25eda8c748e0dfb9f2faba385664edcfb491f99ebfa24c3ca362/68747470733a2f2f646f63732d63646e2e6e6562756c612d67726170682e636f6d2e636e2f666967757265732f6e6562756c612d67726170682d6172636869746563747572655f332e706e67" alt="NebulaGraph Architecture" />
+            <img src="https://github.com/nebula-contrib/nebulagraph-docker-ext/assets/1651790/95933bf9-3ef3-4db1-969f-fb202d9d4c30" alt="NebulaGraph Architecture" />
           </Box>
         </Grid>
         <Grid item xs={12}>
@@ -392,7 +392,7 @@ export default function NebulaGraphTabs() {
     setNgaiIsDeploying(false);
   };
 
-  // Deploy NebulaGraph ngai Playground in Spark Mode
+  // Deploy NebulaGraph ngai Playground in NetworkX Mode
   // 0.1 run docker exec nebulagraph_webshell mkdir -p /host_data/ngai
   // 0.2 run docker exec nebulagraph_webshell mkdir -p /host_data/download
   // 0.3 run docker exec nebulagraph_webshell mkdir -p /host_data/udf
