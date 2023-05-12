@@ -313,7 +313,7 @@ export default function NebulaGraphTabs() {
     }
   };
 
-  // Deploy NebulaGraph ngai Playground
+  // Deploy NebulaGraph ngai Playground in Spark Mode
   // 0.1 run docker exec nebulagraph_webshell mkdir -p /host_data/ngai
   // 0.2 run docker exec nebulagraph_webshell mkdir -p /host_data/download
   // 0.3 run docker exec nebulagraph_webshell mkdir -p /host_data/udf
@@ -326,7 +326,7 @@ export default function NebulaGraphTabs() {
   // 7. run docker exec nebulagraph_webshell wget -O /host_data/ngai/AI_suite_demo.ipynb https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_demo.ipynb
   // 8. run docker exec nebulagraph_webshell wget -O /host_data/ngai/AI_suite_nGQL_UDF.ipynb https://raw.githubusercontent.com/wey-gu/nebula-up/main/spark/AI_suite_nGQL_UDF.ipynb
 
-  const deployNgai = async () => {
+  const deployNgaiSpark = async () => {
     if (isNgaiDeploying) {
       console.log("Ngai is deploying, please wait...");
       return;
@@ -347,27 +347,38 @@ export default function NebulaGraphTabs() {
     await Promise.all(mkdirPromises);
 
     const downloadPromises = [
-      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-algo.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-algorithm/3.1.0/nebula-algorithm-3.1.0.jar']).catch((error: any) => {
-        console.error("Error downloading nebula-algo.jar: ", error);
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'md5sum', '/host_data/download/nebula-algo.jar', '|', 'grep', '319cfbea5f4120d7c6507ae3c77587d7']).catch((error: any) => {
+        console.log("nebula-algo.jar not exists, start downloading", error);
+        ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-algo.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-algorithm/3.1.0/nebula-algorithm-3.1.0.jar']).catch((error: any) => {
+          console.error("Error downloading nebula-algo.jar: ", error);
+        });
       }),
+
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'md5sum', '/host_data/download/nebula-spark-connector.jar', '|', 'grep', 'd002049f1b2f3417534066d44d93edfa']).catch((error: any) => {
+        console.log("nebula-spark-connector.jar not exists, start downloading", error);
+        ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-spark-connector.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-spark-connector/3.4.0/nebula-spark-connector-3.4.0.jar']).catch((error: any) => {
+          console.error("Error downloading nebula-spark-connector.jar: ", error);
+        });
+      }),
+
       ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/docker-compose.yaml', 'https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai.yaml']).catch((error: any) => {
         console.error("Error downloading docker-compose.yaml: ", error);
       }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/docker-compose-ngai-nx.yaml', 'https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai-nx.yaml']).catch((error: any) => {
+        console.error("Error downloading docker-compose-nx.yaml: ", error);
+      }),
       ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/udf/ng_ai.so', 'https://github.com/wey-gu/nebulagraph-ai/releases/download/0.2.9/ng_ai-ubuntu-2004-nebulagraph-nightly-2023.03.13.so']).catch((error: any) => {
         console.error("Error downloading ng_ai.so: ", error);
-      }),
-      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/download/nebula-spark-connector.jar', 'https://repo1.maven.org/maven2/com/vesoft/nebula-spark-connector/3.4.0/nebula-spark-connector-3.4.0.jar']).catch((error: any) => {
-        console.error("Error downloading nebula-spark-connector.jar: ", error);
       }),
     ];
     const results = await Promise.all(downloadPromises);
     results.forEach((result: any) => {
       console.log("the result of wget: ", result);
     });
-  
+
     await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'chmod', '+x', '/host_data/udf/ng_ai.so']);
     console.log("the result of chmod ng_ai.so");
-  
+
     await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose.yaml', 'up', '-d', '--remove-orphans']);
     console.log("the result of docker-compose up");
 
@@ -381,12 +392,85 @@ export default function NebulaGraphTabs() {
     setNgaiIsDeploying(false);
   };
 
+  // Deploy NebulaGraph ngai Playground in Spark Mode
+  // 0.1 run docker exec nebulagraph_webshell mkdir -p /host_data/ngai
+  // 0.2 run docker exec nebulagraph_webshell mkdir -p /host_data/download
+  // 0.3 run docker exec nebulagraph_webshell mkdir -p /host_data/udf
+  // 1. run docker exec nebulagraph_webshell wget -O /host_data/ngai/docker-compose-ngai-nx.yaml https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai-nx.yaml
+  // 2. run docker exec nebulagraph_webshell wget -O /host_data/udf/ng_ai.so https://github.com/wey-gu/nebulagraph-ai/releases/download/0.2.9/ng_ai-ubuntu-2004-nebulagraph-nightly-2023.03.13.so
+  // 3. run docker exec nebulagraph_webshell chmod +x /host_data/udf/ng_ai.so
+  // 4. run docker-compose -f ~/.nebulagraph/ngai/docker-compose-ngai-nx.yaml up -d --remove-orphans
+  // 5. run docker exec nebulagraph_webshell wget -O /host_data/ngai/networkx_engine.ipynb https://github.com/wey-gu/nebulagraph-ai/raw/main/examples/networkx_engine.ipynb
+  // 6. run docker exec nebulagraph_webshell wget -O /host_data/ngai/ng_ai_networkx_plot.ipynb https://github.com/wey-gu/nebulagraph-ai/raw/main/examples/ng_ai_networkx_plot.ipynb
+  // 7. run docker exec nebulagraph_webshell wget -O /host_data/ngai/jupyter_extension.ipynb https://github.com/wey-gu/nebula-up/raw/main/jupyter/jupyter-extension.ipynb
+
+  const deployNgaiNx = async () => {
+    if (isNgaiDeploying) {
+      console.log("Ngai is deploying, please wait...");
+      return;
+    }
+    setNgaiIsDeploying(true);
+    console.log("Start deploying Ngai...");
+    const mkdirPromises = [
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/ngai']).catch((error: any) => {
+        console.error("Error creating directory /host_data/ngai: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/download']).catch((error: any) => {
+        console.error("Error creating directory /host_data/download: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'mkdir', '-p', '/host_data/udf']).catch((error: any) => {
+        console.error("Error creating directory /host_data/udf: ", error);
+      }),
+    ];
+    await Promise.all(mkdirPromises);
+
+    const downloadPromises = [
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/docker-compose-ngai-nx.yaml', 'https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai-nx.yaml']).catch((error: any) => {
+        console.error("Error downloading docker-compose.yaml: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/docker-compose.yaml', 'https://raw.githubusercontent.com/nebula-contrib/nebulagraph-docker-ext/main/optional_workload/docker-compose-ngai.yaml']).catch((error: any) => {
+        console.error("Error downloading docker-compose.yaml: ", error);
+      }),
+      ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/udf/ng_ai.so', 'https://github.com/wey-gu/nebulagraph-ai/releases/download/0.2.9/ng_ai-ubuntu-2004-nebulagraph-nightly-2023.03.13.so']).catch((error: any) => {
+        console.error("Error downloading ng_ai.so: ", error);
+      }),
+    ];
+    const results = await Promise.all(downloadPromises);
+    results.forEach((result: any) => {
+      console.log("the result of wget: ", result);
+    });
+  
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'chmod', '+x', '/host_data/udf/ng_ai.so']);
+    console.log("the result of chmod ng_ai.so");
+  
+    await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose-ngai-nx.yaml', 'up', '-d', '--remove-orphans']);
+    console.log("the result of docker-compose up");
+
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/networkx_engine.ipynb', 'https://github.com/wey-gu/nebulagraph-ai/raw/main/examples/networkx_engine.ipynb']).catch((error: any) => {
+      console.error("Error downloading networkx_engine.ipynb: ", error);
+    });
+
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/ng_ai_networkx_plot.ipynb', 'https://github.com/wey-gu/nebulagraph-ai/raw/main/examples/ng_ai_networkx_plot.ipynb']).catch((error: any) => {
+      console.error("Error downloading ng_ai_networkx_plot.ipynb: ", error);
+    });
+
+    await ddClient.docker.cli.exec('exec', ['nebulagraph_webshell', 'wget', '-O', '/host_data/ngai/jupyter_extension.ipynb', 'https://github.com/wey-gu/nebula-up/raw/main/jupyter/jupyter-extension.ipynb']).catch((error: any) => {
+      console.error("Error downloading jupyter_extension.ipynb: ", error);
+    });
+
+    setNgaiDeployed(true);
+    setNgaiIsDeploying(false);
+  };
+
   // Undeploy NebulaGraph AI
   const undeployNgai = async () => {
     if (isNgaiUndeploying) {
       return;
     }
     await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose.yaml', 'down']);
+    console.log("the result of docker-compose down");
+
+    await ddClient.docker.cli.exec('compose', ['-f', '~/.nebulagraph/ngai/docker-compose-ngai-nx.yaml', 'down']);
     console.log("the result of docker-compose down");
   
     setNgaiDeployed(false);
@@ -572,7 +656,7 @@ export default function NebulaGraphTabs() {
                     <Box>
                     <Button
                       variant="outlined"
-                      onClick={() => openExternalUrl("http://127.0.0.1:7001")}
+                      onClick={() => openExternalUrl("http://127.0.0.1:17001")}
                       endIcon={<Insights />}
                     >
                       Studio in Browser
@@ -850,12 +934,23 @@ export default function NebulaGraphTabs() {
           <Button
             variant="contained"
             color="primary"
-            onClick={deployNgai}
+            onClick={deployNgaiSpark}
             disabled={isNgaiDeploying}
             sx={{ mb: 1, width: '70%' }}
           >
-            Install
+            Install Spark Mode
           </Button>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={deployNgaiNx}
+            disabled={isNgaiDeploying}
+            sx={{ mb: 1, width: '70%' }}
+          >
+            Install NX Mode
+          </Button>
+
           <Button
             variant="contained"
             color="secondary"
@@ -874,26 +969,32 @@ export default function NebulaGraphTabs() {
           <List component="div">
             <ListItem>
               <b>NebulaGraph AI Suite</b> &nbsp; (<a href="#" onClick={() => openExternalUrl("https://github.com/wey-gu/nebulagraph-ai")}>GitHub</a>)
-              is a Python library to run Analytics, Algo & GNN on NebulaGraph.
+              is a high-level Python API for Graph Analytics, Algo & GNN on NebulaGraph.
             </ListItem>
             <ListItem>
-              <b>Step 1 Install:</b> &nbsp; It's not by default installed in NebulaGraph This Docker Extension, to install it, click the Install button.
+              <b>Step 1 Install:</b> &nbsp; It's not by default installed in NebulaGraph This Docker Extension, click the <b>&nbsp;Install Spark Mode&nbsp;</b> or <b>&nbsp;Install NX Mode&nbsp;</b>button.
             </ListItem>
             <ListItem>
-              <b>Step 2 Run:</b> &nbsp; After installation, you go to
-              <Box sx={{ display: 'inline-block', ml: 2, mr: 2 }}>
-                <Button
-                  variant="outlined"
-                  onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_demo.ipynb")}
-                  endIcon={<Psychology />}
-                >
-                  Jupyter Notebook
-                </Button>
-              </Box>
-              and its password is nebula.
+              <b>Step 2 Run:</b> &nbsp; Access notebook with password: nebula. <br/>
+                <Box sx={{ display: 'inline-block', ml: 2, mr: 2 }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_demo.ipynb")}
+                  >
+                    Jupyter NB Spark
+                  </Button>
+                </Box>
+                or <Box sx={{ display: 'inline-block', ml: 2, mr: 2 }}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => openExternalUrl("http://127.0.0.1:38888/lab/workspaces/auto-U/tree/networkx_engine.ipynb")}
+                  >
+                    Jupyter NB NetworkX
+                  </Button>
+                </Box>
             </ListItem>
             <ListItem>
-              <b>Step 3 ng_ai API Gateway:</b> Follow &nbsp;<a href="#" onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_nGQL_UDF.ipynb")}> this </a>&nbsp; to run ng_ai API Gateway and call ng_ai from nGQL.
+              <b>Step 3 [Optional] ng_ai API Gateway:&nbsp;</b> Follow&nbsp;<a href="#" onClick={() => openExternalUrl("http://127.0.0.1:18888/notebooks/ngai/AI_suite_nGQL_UDF.ipynb")}> this</a>&nbsp;to run ng_ai API Gateway and call ng_ai Spark Mode from nGQL.
             </ListItem>
           </List>
         </Typography>

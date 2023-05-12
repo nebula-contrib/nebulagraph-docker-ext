@@ -341,7 +341,7 @@ services:
     environment:
       USER: root
     ports:
-      - 7001:7001
+      - 17001:7001
     healthcheck:
       test: ["CMD", "netstat", "-plunt", "| grep 7001"]
       interval: 30s
@@ -359,7 +359,7 @@ services:
     environment:
       USER: root
     ports:
-      - 7002:7001
+      - 17002:7001
     healthcheck:
       test: ["CMD", "netstat", "-plunt", "| grep 7001"]
       interval: 30s

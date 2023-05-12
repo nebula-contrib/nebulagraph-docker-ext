@@ -28,7 +28,7 @@ export function App() {
             <Button
               variant="outlined"
               onClick={() =>
-                ddClient.host.openExternal('http://127.0.0.1:7001')
+                ddClient.host.openExternal('http://127.0.0.1:17001')
               }
               endIcon={<Insights />}
             >
@@ -42,7 +42,7 @@ export function App() {
             <Button
               variant="outlined"
               onClick={() =>
-                ddClient.host.openExternal('http://127.0.0.1:7002/?lang=EN_US')
+                ddClient.host.openExternal('http://127.0.0.1:17002/?lang=EN_US')
               }
               endIcon={<Explore />}
             >
@@ -72,7 +72,7 @@ export function App() {
     <Box sx={{ alignItems: 'left', flexDirection: 'column', height: 20, fontSize: 10, justifyContent: 'center'}}>
       <Typography variant="body2" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
       <span style={{marginRight: 10}}></span>
-        NebulaGraph for Docker Desktop Extension 0.4.5, NebulaGraph: v3.4.0, NebulaGraph Studio: v3.6.0
+        NebulaGraph for Docker Desktop Extension 0.4.6, NebulaGraph: v3.4.0, NebulaGraph Studio: v3.6.0
       </Typography>
     </Box>
 
