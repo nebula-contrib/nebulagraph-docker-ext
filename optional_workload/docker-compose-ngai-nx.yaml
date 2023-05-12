@@ -10,15 +10,11 @@ services:
     volumes:
       - ./:/home/jovyan
     healthcheck:
-      test:
-        - "wget"
-        - "-q"
-        - "--spider"
-        - "http://127.0.0.1:8888"
-      interval: 30s
+      test: ["CMD-SHELL", "wget http://127.0.0.1:8888 -O /dev/null --no-http-keep-alive || exit 1"]
+      interval: 300s
       timeout: 10s
       retries: 3
-      start_period: 20s
+      start_period: 40s
     networks:
       - weygu_nebulagraph-dd-ext-desktop-extension_nebula-net
 
