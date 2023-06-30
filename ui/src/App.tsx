@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import { Insights, Explore, ArrowBackIos } from '@mui/icons-material';
+import { Insights, Explore, KeyboardArrowRight } from '@mui/icons-material';
 import { createDockerDesktopClient } from '@docker/extension-api-client';
 import {
   AppBar,
@@ -50,13 +50,15 @@ export function App() {
             </Button>
           </Box>
 
+          <span style={{marginRight: 10}}></span>
+
           <Box>
             <Button
               variant="outlined"
               onClick={() =>
                 ddClient.host.openExternal('http://127.0.0.1:8376')
               }
-              endIcon={<ArrowBackIos />}
+              endIcon={<KeyboardArrowRight />}
             >
               Console
             </Button>
@@ -84,7 +86,7 @@ export function App() {
     <Box sx={{ alignItems: 'left', flexDirection: 'column', height: 20, fontSize: 10, justifyContent: 'center'}}>
       <Typography variant="body2" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
       <span style={{marginRight: 10}}></span>
-        NebulaGraph for Docker Desktop Extension 0.4.9, NebulaGraph: v3.5.0, NebulaGraph Studio: v3.7.0
+        NebulaGraph for Docker Desktop Extension 0.4.10, NebulaGraph: v3.5.0, NebulaGraph Studio: v3.7.0
       </Typography>
     </Box>
 
