@@ -614,7 +614,7 @@ export default function NebulaGraphTabs() {
       <TabPanel value={value} index={2}>
         {/* Now NebulaGraph Stuio doesn't support being embedded as an iFrame, let's create an quick start instead. */}
         {/* <StudioHelp/> */}
-        {/* <iframe src="http://127.0.0.1:7003" width="100%" height="800"/> */}
+        {/* <iframe src="http://127.0.0.1:17003" width="100%" height="800"/> */}
 
         <Stepper activeStep={activeStep}>
           {steps.map((label, index) => {
