@@ -487,6 +487,7 @@ export default function NebulaGraphTabs() {
           <Tab label="Docs" {...a11yProps(3)} />
           <Tab label="Console" {...a11yProps(4)} />
           <Tab label="NebulaGraph AI" {...a11yProps(5)} />
+          <Tab label="Gephi-Lite" {...a11yProps(6)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -1036,6 +1037,11 @@ export default function NebulaGraphTabs() {
         </TableContainer>
 
       </TabPanel>
+
+      <TabPanel value={value} index={6}>
+        <iframe src="http://127.0.0.1:17005" width="100%" height="1200"/>
+      </TabPanel>
+
     </Box>
   );
 }
