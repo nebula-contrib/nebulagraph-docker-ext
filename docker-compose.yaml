@@ -353,7 +353,7 @@ services:
   nebulagraph_gephi:
     labels:
       - "com.vesoft.scope=utils"
-    image: weygu/nebulagraph-gephi-exchange:0.1.0
+    image: weygu/nebulagraph-gephi-exchange:v1
     environment:
       USER: root
     ports:
