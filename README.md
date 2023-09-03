@@ -1,5 +1,7 @@
 # NebulaGraph
 
+[![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula) [![Docker Image](https://img.shields.io/docker/v/weygu/nebulagraph-dd-ext?label=Image&logo=docker)](https://hub.docker.com/r/weygu/nebulagraph-gephi-exchange) [![Docker Extension](https://img.shields.io/badge/Docker-Extension-blue?logo=docker)](https://hub.docker.com/extensions/weygu/nebulagraph-dd-ext) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/nebula-contrib/nebulagraph-docker-ext?label=Version)](https://github.com/nebula-contrib/nebulagraph-docker-ext/releases)
+
 This is the repo for NebulaGraph Docker Desktop extension.
 
 https://user-images.githubusercontent.com/1651790/215404357-61d39b95-1675-49cc-a88e-d03ca16d482a.mp4
@@ -74,7 +76,7 @@ docker extension rm weygu/nebulagraph-dd-ext:dev
 
 ## Reference
 
-- To learn more about how to build your extension refer to the Extension SDK docs at https://docs.docker.com/desktop/extensions-sdk/.
-- To publish your extension in the Marketplace visit https://www.docker.com/products/extensions/submissions/.
-- To report issues and feedback visit https://github.com/docker/extensions-sdk/issues.
-- To look for other ideas of new extensions, or propose new ideas of extensions you would like to see, visit https://github.com/docker/extension-ideas/discussions.
+Read the [blog post](https://www.docker.com/blog/distributed-cloud-native-graph-database-nebulagraph-docker-extension/) about this extension.
+
+Follow the steps in the [NebulaGraph Quick Start Workflow](https://docs.nebula-graph.io/3.6.0/2.quick-start/1.quick-start-workflow/) to get started with NebulaGraph Docker Desktop extension.
+
