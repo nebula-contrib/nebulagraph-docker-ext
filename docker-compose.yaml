@@ -353,32 +353,13 @@ services:
   nebulagraph_gephi:
     labels:
       - "com.vesoft.scope=utils"
-    image: weygu/nebulagraph-gephi-exchange:v1
+    image: weygu/nebulagraph-gephi-exchange:v0.1
     environment:
       USER: root
     ports:
       - 17005:8501
     healthcheck:
       test: ["CMD", "curl", "-I", "localhost:8501"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-    networks:
-      - nebula-net
-
-  studio_lagacy:
-    # profiles: ["studio"]
-    labels:
-      - "com.vesoft.scope=utils"
-    platform: linux/amd64
-    image: vesoft/nebula-graph-studio:v3.2.5
-    environment:
-      USER: root
-    ports:
-      - 17002:7001
-    healthcheck:
-      test: ["CMD", "netstat", "-plunt", "| grep 7001"]
       interval: 30s
       timeout: 10s
       retries: 3
