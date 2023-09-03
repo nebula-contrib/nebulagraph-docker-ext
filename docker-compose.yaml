@@ -366,12 +366,12 @@ services:
       start_period: 20s
     networks:
       - nebula-net
+    pull_policy: always
 
   webshell:
     # profiles: ["webshell"]
     labels:
       - "com.vesoft.scope=utils"
-    platform: linux/amd64
     container_name: nebulagraph_webshell
     image: weygu/nebula-webconsole:latest
     ports:
@@ -389,6 +389,8 @@ services:
       - nebula-net
     volumes:
       - ~/.nebulagraph/:/host_data/
+    pull_policy: always
+
 
 networks:
   nebula-net:
