@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import { Insights, Explore, KeyboardArrowRight, AutoAwesome } from '@mui/icons-material';
+import { Insights, LibraryBooks, KeyboardArrowRight, AutoAwesome } from '@mui/icons-material';
 import { createDockerDesktopClient } from '@docker/extension-api-client';
 
 import {
@@ -33,7 +33,7 @@ export function App() {
               }
               endIcon={<Insights />}
             >
-              Studio in Browser
+              Studio
             </Button>
           </Box>
 
@@ -50,6 +50,21 @@ export function App() {
               Gephi-Lite
             </Button>
           </Box>
+
+          <span style={{marginRight: 10}}></span>
+
+          <Box>
+            <Button
+              variant="outlined"
+              onClick={() =>
+                ddClient.host.openExternal('http://127.0.0.1:28888?token=nebula')
+              }
+              endIcon={<LibraryBooks />}
+            >
+              Jupyter
+            </Button>
+          </Box>
+
 
           <span style={{marginRight: 10}}></span>
 
@@ -87,7 +102,7 @@ export function App() {
     <Box sx={{ alignItems: 'left', flexDirection: 'column', height: 20, fontSize: 10, justifyContent: 'center'}}>
       <Typography variant="body2" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
       <span style={{marginRight: 10}}></span>
-        NebulaGraph for Docker Desktop Extension 0.4.17, NebulaGraph: v3.6.0, NebulaGraph Studio: v3.7.0
+        NebulaGraph for Docker Desktop Extension 0.4.18, NebulaGraph: v3.6.0, NebulaGraph Studio: v3.7.0
       </Typography>
     </Box>
 

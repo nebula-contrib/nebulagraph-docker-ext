@@ -135,13 +135,13 @@ function homePage() {
               <a href="#"
                 onClick={() => openExternalUrl("https://stackoverflow.com/questions/tagged/nebula-graph")}
               >
-                <img src="https://img.shields.io/badge/Stack%20Overflow-nebula--graph-orange?style=for-the-badge&amp;logo=stack-overflow&amp;logoColor=white" alt="Stack Overflow"/>
+                <img src="https://img.shields.io/badge/SO-nebulagraph-orange?style=for-the-badge&amp;logo=stack-overflow&amp;logoColor=white" alt="Stack Overflow"/>
               </a>
               <span style={{marginRight: 10}}></span>
               <a href="#"
                 onClick={() => openExternalUrl("https://github.com/vesoft-inc/nebula/discussions")}
               >
-                <img src="https://img.shields.io/badge/GitHub_Discussion-000000?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="Discussions"/>
+                <img src="https://img.shields.io/badge/GH_Discussion-000000?style=for-the-badge&amp;logo=github&amp;logoColor=white" alt="Discussions"/>
               </a>
               <span style={{marginRight: 10}}></span>
               <a href="#"
@@ -660,7 +660,7 @@ export default function NebulaGraphTabs() {
                       onClick={() => openExternalUrl("http://127.0.0.1:17001")}
                       endIcon={<Insights />}
                     >
-                      Studio in Browser
+                      Studio
                     </Button>
                     </Box>
                 </Typography>
