@@ -391,6 +391,24 @@ services:
       - ~/.nebulagraph/:/host_data/
     pull_policy: always
 
+  nebulagraph_jupyter:
+    labels:
+      - "com.vesoft.scope=utils"
+    image: 'weygu/nebulagraph-jupyter:v0'
+    container_name: nebulagraph_jupyter
+    restart: always
+    ports:
+      - '28888:8888'
+    volumes:
+      - ~/.nebulagraph/:/home/jovyan
+    healthcheck:
+      test: ["CMD-SHELL", "wget http://127.0.0.1:8888 -O /dev/null --no-http-keep-alive || exit 1"]
+      interval: 300s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - nebula-net
 
 networks:
   nebula-net:
