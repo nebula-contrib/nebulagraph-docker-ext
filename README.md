@@ -1,6 +1,6 @@
 # NebulaGraph
 
-[![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula) [![Docker Image](https://img.shields.io/docker/v/weygu/nebulagraph-dd-ext?label=Image&logo=docker)](https://hub.docker.com/r/weygu/nebulagraph-gephi-exchange) [![Docker Extension](https://img.shields.io/badge/Docker-Extension-blue?logo=docker)](https://hub.docker.com/extensions/weygu/nebulagraph-dd-ext) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/nebula-contrib/nebulagraph-docker-ext?label=Version)](https://github.com/nebula-contrib/nebulagraph-docker-ext/releases)
+[![for NebulaGraph](https://img.shields.io/badge/Toolchain-NebulaGraph-blue)](https://github.com/vesoft-inc/nebula) [![Docker Image](https://img.shields.io/docker/v/weygu/nebulagraph-dd-ext?label=Image&logo=docker)](https://hub.docker.com/r/weygu/nebulagraph-dd-ext) [![Docker Extension](https://img.shields.io/badge/Docker-Extension-blue?logo=docker)](https://hub.docker.com/extensions/weygu/nebulagraph-dd-ext) [![GitHub release (latest by date)](https://img.shields.io/github/v/release/nebula-contrib/nebulagraph-docker-ext?label=Version)](https://github.com/nebula-contrib/nebulagraph-docker-ext/releases)
 
 This is the repo for NebulaGraph Docker Desktop extension.
 
@@ -13,6 +13,7 @@ For a full deployment guide, refer to [https://youtu.be/AOMexOohZYI](https://you
 Just click **[here](https://hub.docker.com/extensions/weygu/nebulagraph-dd-ext)** to install if you already have the latest version of Docker Desktop installed.
 
 Or search NebulaGraph from Docker Desktop Extension Marketplace.
+
 ![](https://user-images.githubusercontent.com/1651790/220068245-bb1b7e01-4173-48e3-8ad4-d6de74157ff1.png)
 
 ## Local development
