@@ -336,7 +336,7 @@ services:
     # profiles: ["studio"]
     labels:
       - "com.vesoft.scope=utils"
-    image: vesoft/nebula-graph-studio:v3.7.0
+    image: vesoft/nebula-graph-studio:v3.9.0
     environment:
       USER: root
     ports:
