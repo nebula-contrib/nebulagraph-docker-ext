@@ -95,7 +95,7 @@ export function App() {
     <Box sx={{ alignItems: 'left', flexDirection: 'column', height: 20, fontSize: 10, justifyContent: 'center'}}>
       <Typography variant="body2" color={(theme) => theme.palette.text.primary} sx={{ my: 2, mr: 6 }}>
       <span style={{marginRight: 10}}></span>
-        NebulaGraph for Docker Desktop Extension 0.4.19, NebulaGraph: v3.6.0, NebulaGraph Studio: v3.9.0
+        NebulaGraph for Docker Desktop Extension 0.4.20, NebulaGraph: v3.8, NebulaGraph Studio: v3.10.0
       </Typography>
     </Box>
 
