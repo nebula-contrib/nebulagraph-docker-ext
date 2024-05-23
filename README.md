@@ -79,5 +79,5 @@ docker extension rm weygu/nebulagraph-dd-ext:dev
 
 Read the [blog post](https://www.docker.com/blog/distributed-cloud-native-graph-database-nebulagraph-docker-extension/) about this extension.
 
-Follow the steps in the [NebulaGraph Quick Start Workflow](https://docs.nebula-graph.io/3.6.0/2.quick-start/1.quick-start-workflow/) to get started with NebulaGraph Docker Desktop extension.
+Follow the steps in the [NebulaGraph Quick Start Workflow](https://docs.nebula-graph.io/3.8.0/2.quick-start/1.quick-start-workflow/) to get started with NebulaGraph Docker Desktop extension.
 
